@@ -1,14 +1,15 @@
 package com.stock.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
+import com.stock.model.StockExchange;
 import com.stock.model.SymbolStatus;
 import com.stock.model.WatchSymbol;
-import com.stock.repositories.SymbolRepository;
 import com.stock.repositories.SymbolStatusRepository;
 import com.stock.repositories.WatchSymbolRepository;
 
@@ -19,29 +20,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SymbolServiceImpl implements SymbolService {
 
-//	@Autowired
-//	private SymbolRepository symbolRepository;
-	
 	@Autowired
 	private WatchSymbolRepository watchSymbolRepository;
 	@Autowired
 	private SymbolStatusRepository symbolStatusRepository;
-	
-	
-//	public SymbolServiceImpl(SymbolRepository symbolRepository, WatchSymbolRepository watchSymbolRepository,
-//			SymbolStatusRepository symbolStatusRepository) {
-//		super();
-//		this.symbolRepository = symbolRepository;
-//		this.watchSymbolRepository = watchSymbolRepository;
-//		this.symbolStatusRepository = symbolStatusRepository;
-//	}
-	
-	
-	@Override
-	public List<String> getSymbols() {
-		return watchSymbolRepository.findAllSymbols();
-	}
 
+	/**
+	 * Get a list of symbols for processing
+	 */
+	@Override
+	public List<StockExchange> findAllSymbols() {
+	    List<Object[]> results = watchSymbolRepository.findAllSymbolsNative();
+	    return results.stream()
+	                  .map(row -> new StockExchange((String) row[0], (String) row[1]))
+	                  .collect(Collectors.toList());
+	}
+	
 	@Override
 	public List<WatchSymbol> getWatchSymbolsData() {
 		Iterable<WatchSymbol> p = watchSymbolRepository.findAll();
@@ -68,5 +62,10 @@ public class SymbolServiceImpl implements SymbolService {
 	@Override
 	public void deleteSymbolStatusWithoutTO() {
 		symbolStatusRepository.deleteSymbolsEndingWithoutTO();
-	}	
+	}
+
+	@Override
+	public void truncateData() {
+		symbolStatusRepository.truncateData();
+	}
 }

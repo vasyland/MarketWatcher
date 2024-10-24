@@ -115,13 +115,8 @@ public class SymbolStatusProcessorImpl implements SymbolStatusProcessor {
 		}
 		
 		/* Clean table from the records  */
-		if(exchange.equalsIgnoreCase("TSX")) {
-			symbolService.deleteSymbolStatusWithTO();
-		} else {
-			symbolService.deleteSymbolStatusWithoutTO();
-		}
+		symbolService.truncateData();
 		log.info("Cleaning table done. Exchange = " + exchange);
-		
 		log.info("Number of processed symbols: " + result.size());
 		
 		/* Saving calculations into table  */

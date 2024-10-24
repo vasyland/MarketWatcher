@@ -22,4 +22,9 @@ public interface SymbolStatusRepository extends CrudRepository<SymbolStatus, Str
     @Transactional
     @Query(value = "DELETE FROM symbol_status WHERE symbol NOT LIKE '%.TO'", nativeQuery = true)
     void deleteSymbolsEndingWithoutTO();
+    
+    @Modifying
+    @Transactional
+    @Query(value = "TRUNCATE TABLE symbol_status", nativeQuery = true)
+    void truncateData();
 }

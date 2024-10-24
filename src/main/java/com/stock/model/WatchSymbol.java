@@ -9,81 +9,93 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "watch_symbol", uniqueConstraints = {@UniqueConstraint(columnNames = "symbol")})
+@Table(name = "watch_symbol", uniqueConstraints = { @UniqueConstraint(columnNames = "symbol") })
 public class WatchSymbol {
 
-  // private static final long serialVersionUID = -2952735933715107255L;
+	// private static final long serialVersionUID = -2952735933715107255L;
 
-  @Id
-  @Column(name = "symbol", unique = true, nullable = false, length = 10)
-  private String symbol;
-  @Column(name = "quoterly_dividend_amount")
-  private BigDecimal quoterlyDividendAmount;
-  @Column(name = "upper_yield")
-  private BigDecimal upperYield;
-  @Column(name = "lower_yield")
-  private BigDecimal lowerYield;
-  @Column(name = "updated_on")
-  private LocalDateTime updatedOn;
+	@Id
+	@Column(name = "symbol", unique = true, nullable = false, length = 10)
+	private String symbol;
+	@Column(name = "quoterly_dividend_amount")
+	private BigDecimal quoterlyDividendAmount;
+	@Column(name = "upper_yield")
+	private BigDecimal upperYield;
+	@Column(name = "lower_yield")
+	private BigDecimal lowerYield;
+	@Column(name = "updated_on")
+	private LocalDateTime updatedOn;
+	@Column(name = "exchange")
+	private String exchange;
 
-  public WatchSymbol() {
-    super();
-  }
+	public WatchSymbol() {
+		super();
+	}
 
-  public WatchSymbol(String symbol, BigDecimal quoterlyDividendAmount, BigDecimal upperYield,
-      BigDecimal lowerYield, LocalDateTime updatedOn) {
-    super();
-    this.symbol = symbol;
-    this.quoterlyDividendAmount = quoterlyDividendAmount;
-    this.upperYield = upperYield;
-    this.lowerYield = lowerYield;
-    this.updatedOn = updatedOn;
-  }
+	public WatchSymbol(String symbol, BigDecimal quoterlyDividendAmount, BigDecimal upperYield, BigDecimal lowerYield,
+			LocalDateTime updatedOn, String exchange) {
+		super();
+		this.symbol = symbol;
+		this.quoterlyDividendAmount = quoterlyDividendAmount;
+		this.upperYield = upperYield;
+		this.lowerYield = lowerYield;
+		this.updatedOn = updatedOn;
+		this.exchange = exchange;
+	}
 
-  public String getSymbol() {
-    return symbol;
-  }
+	public String getSymbol() {
+		return symbol;
+	}
 
-  public void setSymbol(String symbol) {
-    this.symbol = symbol;
-  }
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
 
-  public BigDecimal getQuoterlyDividendAmount() {
-    return quoterlyDividendAmount;
-  }
+	public BigDecimal getQuoterlyDividendAmount() {
+		return quoterlyDividendAmount;
+	}
 
-  public void setQuoterlyDividendAmount(BigDecimal quoterlyDividendAmount) {
-    this.quoterlyDividendAmount = quoterlyDividendAmount;
-  }
+	public void setQuoterlyDividendAmount(BigDecimal quoterlyDividendAmount) {
+		this.quoterlyDividendAmount = quoterlyDividendAmount;
+	}
 
-  public BigDecimal getUpperYield() {
-    return upperYield;
-  }
+	public BigDecimal getUpperYield() {
+		return upperYield;
+	}
 
-  public void setUpperYield(BigDecimal upperYield) {
-    this.upperYield = upperYield;
-  }
+	public void setUpperYield(BigDecimal upperYield) {
+		this.upperYield = upperYield;
+	}
 
-  public BigDecimal getLowerYield() {
-    return lowerYield;
-  }
+	public BigDecimal getLowerYield() {
+		return lowerYield;
+	}
 
-  public void setLowerYield(BigDecimal lowerYield) {
-    this.lowerYield = lowerYield;
-  }
+	public void setLowerYield(BigDecimal lowerYield) {
+		this.lowerYield = lowerYield;
+	}
 
-  public LocalDateTime getUpdatedOn() {
-    return updatedOn;
-  }
+	public LocalDateTime getUpdatedOn() {
+		return updatedOn;
+	}
 
-  public void setUpdatedOn(LocalDateTime updatedOn) {
-    this.updatedOn = updatedOn;
-  }
+	public void setUpdatedOn(LocalDateTime updatedOn) {
+		this.updatedOn = updatedOn;
+	}
 
-  @Override
-  public String toString() {
-    return "WatchSymbol [symbol=" + symbol + ", quoterlyDividendAmount=" + quoterlyDividendAmount
-        + ", upperYield=" + upperYield + ", lowerYield=" + lowerYield + ", updatedOn=" + updatedOn
-        + "]";
-  }
+	public String getExchange() {
+		return exchange;
+	}
+
+	public void setExchange(String exchange) {
+		this.exchange = exchange;
+	}
+
+	@Override
+	public String toString() {
+		return "WatchSymbol [symbol=" + symbol + ", quoterlyDividendAmount=" + quoterlyDividendAmount + ", upperYield="
+				+ upperYield + ", lowerYield=" + lowerYield + ", updatedOn=" + updatedOn + ", exchange=" + exchange
+				+ "]";
+	}
+
 }

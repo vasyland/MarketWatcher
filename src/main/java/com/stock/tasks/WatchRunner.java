@@ -1,6 +1,8 @@
 package com.stock.tasks;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.stock.model.CombinedSymbolData;
 import com.stock.model.FmpSymbolData;
+import com.stock.model.StockExchange;
 import com.stock.model.WatchSymbol;
 import com.stock.services.FmpDataProvider;
 import com.stock.services.SymbolService;
@@ -33,29 +36,40 @@ public class WatchRunner {
 	public void runJob() {
 		
 		/* Getting List of symbol from db to process */
-		List<String> symbolList = symbolService.getSymbols();
+		List<StockExchange> symbolList = symbolService.findAllSymbols();
 		log.info("Symbols to process: " + symbolList);
 		
 		/* Getting watched symbols with defined yield range */
 		List<WatchSymbol>  watchedSymbols = symbolService.getWatchSymbolsData();
-				
-		/*  Getting last price for the symbol from fmp provider  */
-		List<FmpSymbolData> tsxData = fmpDataProvider.getAllStockData();
-        log.info("Data count: " + tsxData.size());
+
 		
-//		tsxData.forEach(t -> {
-//			if(t.price() != null && t.price() > Double.parseDouble("20") && t.price() < Double.parseDouble("100"))
-//				System.out.println(t.symbol() + "   " + t.price());
-//		});
+		/* He we need to select all exchanges and query each exchange for data and then to combine them into one big list */
+		Set<String> uniqueExchanges = symbolList.stream()
+			    .map(StockExchange::exchange)  // Extract the exchange field
+			    .collect(Collectors.toSet());  // Collect unique exchanges into a Set
+
+		List<String> exchangeList = new ArrayList<>(uniqueExchanges);
+		log.info("Exchanges: " + exchangeList);
 		
-//		List<FmpSymbolData> tsxtoProcessData = filterData(watchedSymbols, tsxData);
-//		tsxtoProcessData.forEach(t -> {
-//			if(t.price() != null && t.price() > Double.parseDouble("20") && t.price() < Double.parseDouble("100"))
-//				System.out.println(t.symbol() + "   " + t.price());
-//		});
+		List<FmpSymbolData> allExchangesData = new ArrayList<>(); 
 		
+		/* Loop via all exchanges and get data into one buckle */
+		for(int i=0; i< exchangeList.size(); i++) {
+			if(exchangeList.get(i) == null) {
+				log.error("Null found in exchange field in one of the symbols. Review watch_symbol table.");
+				continue;
+			}
+			
+			/*  Getting last price for the symbol from fmp provider  */
+			List<FmpSymbolData> exchangeData = fmpDataProvider.getAllExchangeData(exchangeList.get(i));
+			if (exchangeData != null) {
+				allExchangesData.addAll(exchangeData);
+			}
+		}
 		
-		List<CombinedSymbolData> combinedList = filterAndCombineData(watchedSymbols, tsxData);
+        log.info("Data count: " + allExchangesData.size());
+		
+		List<CombinedSymbolData> combinedList = filterAndCombineData(watchedSymbols, allExchangesData);
 		combinedList.forEach(t -> {
 				System.out.println(t.symbol() + " Price: " + t.price() + " Div.$: " + t.quoterlyDividendAmount()
 				+ " UYield: " + t.upperYield() + "  LYield: " + t.lowerYield());

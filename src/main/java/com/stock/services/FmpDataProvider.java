@@ -44,6 +44,21 @@ public class FmpDataProvider {
    }
     
     
+    public List<FmpSymbolData> getAllExchangeData(String stockExchange) {
+      	 try {
+               return webClient.get()
+                       .uri("/api/v3/symbol/"+ stockExchange + "?apikey=" + apiKey)
+                       .retrieve()
+                       .bodyToFlux(FmpSymbolData.class)
+                       .collectList()
+                       .block(); // block() makes the call synchronous
+           } catch (WebClientResponseException ex) {
+               System.err.println("Error fetching exchange stock data: " + ex.getResponseBodyAsString());
+               return List.of(); // Return empty list if there is an error
+           }
+      }
+    
+    
     /*
      * Return Mono<String> instead of void
      */
