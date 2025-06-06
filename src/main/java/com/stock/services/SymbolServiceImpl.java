@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,10 @@ import com.stock.repositories.HistoryPriceRepository;
 import com.stock.repositories.SymbolStatusRepository;
 import com.stock.repositories.WatchSymbolRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-//@RequiredArgsConstructor
-@Slf4j
 public class SymbolServiceImpl implements SymbolService {
+	
+	private static final Logger log = LoggerFactory.getLogger(SymbolServiceImpl.class);
 
 	@Autowired
 	private WatchSymbolRepository watchSymbolRepository;

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,11 +15,10 @@ import org.springframework.stereotype.Service;
 import com.stock.model.CombinedSymbolData;
 import com.stock.model.SymbolStatus;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class SymbolStatusProcessorImpl implements SymbolStatusProcessor {
+	
+	private static final Logger log = LoggerFactory.getLogger(SymbolStatusProcessorImpl.class);
 
 	@Value("${fmp.exchange}")
     private String exchange;
