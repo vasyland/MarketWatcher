@@ -15,3 +15,8 @@ Free plan allows only 250 calls per day on limited time. But for this applicatio
 5. This application can be run on local laptop and there is no need to deploy it to the cloud. 
 
 ```
+
+## Used Data Source
+https://financialmodelingprep.com/api/v3/symbol/TSX?apikey=ATt4kh10v7qTrdhbmSvWWOJmpYLgMIy5
+https://financialmodelingprep.com/api/v3/symbol/NYSE?apikey=ATt4kh10v7qTrdhbmSvWWOJmpYLgMIy5
+https://financialmodelingprep.com/api/v3/symbol/NASDAQ?apikey=ATt4kh10v7qTrdhbmSvWWOJmpYLgMIy5

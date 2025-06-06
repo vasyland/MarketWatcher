@@ -43,11 +43,11 @@ public class SymbolStatusProcessorImpl implements SymbolStatusProcessor {
 		for(CombinedSymbolData csd : data) {
 			
 			/* convert price from Double into BigDecimal */
-			BigDecimal price = BigDecimal.valueOf(csd.price());
+			BigDecimal currentPrice = BigDecimal.valueOf(csd.price());
 			
 			/* Current Yield */
 			BigDecimal yield = csd.quoterlyDividendAmount().multiply(BigDecimal.valueOf(400))
-		            .divide(price, RoundingMode.HALF_EVEN);
+		            .divide(currentPrice, RoundingMode.HALF_EVEN);
 			BigDecimal yieldRange = csd.upperYield().subtract(csd.lowerYield());
 			BigDecimal quoterOfUpperYield =  yieldRange.divide(BigDecimal.valueOf(6), 3, RoundingMode.HALF_EVEN);
 			BigDecimal allowedBuyYield = csd.upperYield().subtract(quoterOfUpperYield);
@@ -56,6 +56,33 @@ public class SymbolStatusProcessorImpl implements SymbolStatusProcessor {
 			BigDecimal bestBuyPrice = csd.quoterlyDividendAmount().multiply(BigDecimal.valueOf(400)).divide(csd.upperYield(), RoundingMode.HALF_EVEN);
 			BigDecimal allowedBuyPrice = csd.quoterlyDividendAmount().multiply(BigDecimal.valueOf(400)).divide(allowedBuyYield, RoundingMode.HALF_EVEN);
 			
+			BigDecimal overpricedAmount = currentPrice.subtract(bestBuyPrice).setScale(4, RoundingMode.HALF_UP);
+			
+			BigDecimal overpricedPercentage = BigDecimal.ZERO;
+			if (currentPrice.compareTo(BigDecimal.ZERO) > 0) {
+			    overpricedPercentage = (currentPrice.subtract(bestBuyPrice))
+			            .divide(currentPrice, RoundingMode.HALF_EVEN)
+			            .multiply(BigDecimal.valueOf(100));
+			}
+			
+//			BigDecimal overpricedPercentage2 = (currentPrice.subtract(bestBuyPrice))
+//					.divide(currentPrice).multiply(BigDecimal.valueOf(100)).setScale(4, RoundingMode.HALF_UP);
+			
+			BigDecimal sellPrice = csd.quoterlyDividendAmount().multiply(BigDecimal.valueOf(400)).divide(csd.lowerYield(), RoundingMode.HALF_EVEN);
+			log.info("\n" + csd.symbol() + "  Price:" + currentPrice +
+					"  QDivAmt: " + csd.quoterlyDividendAmount() +
+					"  Yield: " + yield +
+					"  \n         Upper Yield: " + csd.upperYield() +
+					"  Lower Yield: " + csd.lowerYield() +
+					"  Quoter of Yield Range: " + quoterOfUpperYield +
+					"  Allowed to Buy Yield: " + allowedBuyYield +
+					"  Allowed to Buy Price: " + allowedBuyPrice +
+					"  Best Buy Price: " + bestBuyPrice +
+					"  Overpriced Amount: " + overpricedAmount +
+					"  Overpriced Percentage: " + overpricedPercentage +
+					
+					"  Sell Point Yield: " + sellPointYield +
+					"  Sell Price: " + sellPrice);
 			/* 
 		     * Action = "Buy" if current yield is above Upper yield or in the top of 1/4th of the range
 		     * between Upper and Lower yields 
@@ -81,7 +108,7 @@ public class SymbolStatusProcessorImpl implements SymbolStatusProcessor {
 		    	action = "N/A";
 		    }
 			
-		    log.info("\n" + csd.symbol() + "  Price:" + price + 
+		    log.info("\n" + csd.symbol() + "  Price:" + currentPrice + 
 		    		"  QDivAmt: " + csd.quoterlyDividendAmount() + 
 		    		"  Yield: " + yield + 
 		    		"  \n         Upper Yield: " + csd.upperYield() +
@@ -95,7 +122,7 @@ public class SymbolStatusProcessorImpl implements SymbolStatusProcessor {
 		    /* Symbol Status data */
 	    	SymbolStatus symbolStatus = new SymbolStatus();
 	    	symbolStatus.setSymbol(csd.symbol());
-		    symbolStatus.setCurrentPrice(price);
+		    symbolStatus.setCurrentPrice(currentPrice);
 		    symbolStatus.setCurrentYield(yield);
 		    symbolStatus.setAllowedBuyPrice(allowedBuyPrice);
 		    symbolStatus.setBestBuyPrice(bestBuyPrice);

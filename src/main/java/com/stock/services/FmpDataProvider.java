@@ -31,6 +31,9 @@ public class FmpDataProvider {
     
     public List<FmpSymbolData> getAllStockData() {
    	 try {
+   		 String url = "/api/v3/symbol/"+ exchange + "?apikey=" + apiKey;
+   		 log.info("[FmpDataProvider:getAllExchangeData] FmpDataProvider url = " + url);
+   		 
             return webClient.get()
                     .uri("/api/v3/symbol/"+ exchange + "?apikey=" + apiKey)
                     .retrieve()
@@ -46,6 +49,9 @@ public class FmpDataProvider {
     
     public List<FmpSymbolData> getAllExchangeData(String stockExchange) {
       	 try {
+      		 String url = "/api/v3/symbol/"+ stockExchange + "?apikey=" + apiKey;
+      		 log.info("[FmpDataProvider:getAllExchangeData] FmpDataProvider url = " + url);
+      		 
                return webClient.get()
                        .uri("/api/v3/symbol/"+ stockExchange + "?apikey=" + apiKey)
                        .retrieve()
