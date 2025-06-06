@@ -2,19 +2,20 @@ package com.stock.services;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.stock.model.FmpSymbolData;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Component
-@Slf4j
 public class FmpDataProvider {
+	
+	private static final Logger log = LoggerFactory.getLogger(FmpDataProvider.class);
 
 	@Value("${fmp.apiKey}")
     private String apiKey;

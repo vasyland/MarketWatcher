@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,15 +23,14 @@ import com.stock.model.WatchSymbol;
 import com.stock.repositories.ListedCompanyRepository;
 import com.stock.services.FmpDataProvider;
 import com.stock.services.SymbolService;
+import com.stock.services.SymbolServiceImpl;
 import com.stock.services.SymbolStatusProcessorImpl;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Component
-//@RequiredArgsConstructor
-@Slf4j
 public class WatchRunner {
 
+	private static final Logger log = LoggerFactory.getLogger(WatchRunner.class);
+	
 	@Autowired
 	private SymbolService symbolService;
 	@Autowired
